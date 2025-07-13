@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <title>Kids Hair Salon Booking</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0; padding: 0; background: linear-gradient(135deg, #fceabb, #f8b500);
+      font-family: 'Comic Neue', cursive, sans-serif;
+      color: #4b2e83;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      user-select: none;
+      overflow-x: hidden;
+      padding: 20px 10px;
+    }
+    header {
+      font-size: 2.8rem;
+      font-weight: 900;
+      margin: 20px 0 20px;
+      text-shadow: 2px 2px #f9f6fc;
+    }
+    section {
+      background: white;
+      border-radius: 20px;
+      padding: 25px 30px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      width: 360px;
+      max-width: 95vw;
+      text-align: center;
+      animation: fadeIn 1s ease forwards;
+      position: relative;
+      margin-bottom: 25px;
+    }
+    input[type=text], input[type=date], input[type=time], input[type=file], input[type=search] {
+      font-family: 'Comic Neue', cursive;
+      width: 100%;
+      padding: 10px 12px;
+      margin: 8px 0 14px;
+      border-radius: 12px;
+      border: 2px solid #f8b500;
+      outline: none;
+      font-size: 1.05rem;
+      transition: border-color 0.3s ease;
+      box-shadow: 0 3px 7px #fcd46d;
+    }
+    input[type=text]:focus, input[type=date]:focus, input[type=time]:focus, input[type=search]:focus {
+      border-color: #9f79f7;
+      box-shadow: 0 0 15px #9f79f7;
+    }
+    button {
+      cursor: pointer;
+      background: #9f79f7;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 18px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: white;
+      box-shadow: 0 4px 12px rgba(159, 121, 247, 0.7);
+      transition: background 0.3s ease;
+      user-select: none;
+      margin: 6px 6px 0 6px;
+      min-width: 110px;
+    }
+    button:hover {
+      background: #7c56e0;
+      box-shadow: 0 6px 18px rgba(124, 86, 224, 0.8);
+    }
+    #appointments-list {
+      margin-top: 15px;
+      max-height: 250px;
+      overflow-y: auto;
+      text-align: left;
+      border: 2px dashed #f8b500;
+      padding: 15px 20px;
+      border-radius: 14px;
+      margin-bottom: 25px;
+      font-size: 1.05rem;
+    }
+    .appointment {
+      background: #fceabb;
+      border-radius: 12px;
+      padding: 6px 10px;
+      margin-bottom: 8px;
+      font-size: 1rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+      animation: bounceIn 0.5s ease forwards;
+      position: relative;
+    }
+    .remove-btn {
+      position: absolute;
+      right: 10px;
+      top: 6px;
+      background: transparent;
+      border: none;
+      color: #b33939;
+      font-weight: 900;
+      font-size: 18px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .remove-btn:hover {
+      color: #7a1a1a;
+    }
+    #message, #login-message {
+      color: #4b2e83;
+      margin-top: 10px;
+      font-weight: 600;
+      min-height: 24px;
+      min-width: 250px;
+    }
+    #login-message {
+      color: #b33939;
+    }
+    /* Calendar styles */
+    #calendar {
+      width: 100%;
+      margin-top: 15px;
+      user-select: none;
+    }
+    #calendar table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 0.9rem;
+    }
+    #calendar th {
+      background: #9f79f7;
+      color: white;
+      padding: 6px 0;
+      border-radius: 8px 8px 0 0;
+      user-select: none;
+    }
+    #calendar td {
+      border: 1px solid #f8b500;
+      padding: 8px 5px;
+      text-align: center;
+      vertical-align: top;
+      height: 70px;
+      cursor: default;
+      position: relative;
+    }
+    #calendar td.today {
+      background: #fceabb;
+      font-weight: 700;
+      box-shadow: 0 0 10px 2px #9f79f7 inset;
+    }
+    #calendar td.appointment-day {
+      background: #f8d85c88;
+      cursor: pointer;
+    }
+    #calendar td span.date-num {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: #4b2e83;
+    }
+    #calendar td .appt-count {
+      margin-top: 20px;
+      font-size: 0.75rem;
+      color: #7c56e0;
+      font-weight: 700;
+    }
+    #calendar-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      margin-bottom: 5px;
+    }
+    #calendar-nav button {
+      min-width: 90px;
+      padding: 8px 12px;
+      font-size: 1rem;
+      background: #9f79f7;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(159, 121, 247, 0.7);
+      color: white;
+    }
+    #calendar-nav button:hover {
+      background: #7c56e0;
+      box-shadow: 0 6px 18px rgba(124, 86, 224, 0.8);
+    }
+    /* Animations */
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+    @keyframes bounceIn {
+      0% {opacity: 0; transform: translateY(-20px);}
+      60% {opacity: 1; transform: translateY(10px);}
+      100% {transform: translateY(0);}
+    }
+    /* Responsive tweaks */
+    @media (max-width: 400px) {
+      section {
+        width: 100%;
+        padding: 20px;
+      }
+      button {
+        min-width: 100px;
+        font-size: 1rem;
+        padding: 10px 12px;
+        margin: 6px 3px 0 3px;
+      }
+    }
+    /* ========== Admin Panel Bigger ========= */
+    #admin-section {
+      display: none;
+      width: 700px;
+      max-width: 95vw;
+      margin: 0 auto 25px auto;
+      padding: 20px 30px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      text-align: left;
+      font-size: 1rem;
+      line-height: 1.4;
+      user-select: none;
+      position: relative;
+    }
+    #admin-search {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 1.1rem;
+      border-radius: 14px;
+      border: 2px solid #9f79f7;
+      box-shadow: 0 3px 7px #c3a9ff;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<header>Kidsy Salony ✂️</header>
+
+<!-- Login -->
+<section id="login-section">
+  <p style="font-size:1.2rem;">Enter your username:</p>
+  <input id="username-input" type="text" placeholder="Your username" autocomplete="off" autofocus />
+  <button id="login-btn">Login</button>
+  <div id="login-message"></div>
+</section>
+
+<!-- Booking -->
+<section id="booking-section" style="display:none;">
+  <h2>Book an Appointment</h2>
+  <input id="kid-name" type="text" placeholder="Child's Name" autocomplete="off" />
+  <input id="appointment-date" type="date" />
+  <input id="appointment-time" type="time" />
+  <button id="book-btn">Book Now!</button>
+  <div id="message"></div>
+</section>
+
+<!-- Thank You -->
+<section id="thankyou-section" style="display:none;">
+  <h2>Thank You for Booking! 🎉</h2>
+  <p>We can’t wait to style your kiddo’s hair!</p>
+  <button id="book-again-btn">Book Again</button>
+  <button id="end-session-btn" style="background:#e74c3c;">End Session</button>
+</section>
+
+<!-- Admin Panel -->
+<section id="admin-section">
+  <h2>Admin Panel - Appointments</h2>
+  <input id="admin-search" type="search" placeholder="Search appointments..." />
+  <div id="appointments-list"><em>No appointments booked yet.</em></div>
+  
+  <div id="calendar-nav">
+    <button id="prev-month-btn">&lt; Prev</button>
+    <div id="calendar-month-year" style="font-weight: 700; font-size:1.1rem; padding-top:6px;"></div>
+    <button id="next-month-btn">Next &gt;</button>
+  </div>
+  <div id="calendar"></div>
+
+  <div style="margin-top: 15px;">
+    <button id="export-json-btn" style="background:#4a90e2;">Export DB (.json)</button>
+    <input type="file" id="import-json-input" style="display:none;" accept=".json" />
+    <button id="import-json-btn" style="background:#27ae60;">Import DB (.json)</button>
+  </div>
+
+  <button id="logout-admin-btn" style="margin-top:15px; background:#e74c3c;">Logout Admin</button>
+</section>
+
+<audio id="ding-sound" src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg" preload="auto"></audio>
+
+<script>
+  const adminUsername = 'kfd1qw';
+  let isAdmin = false;
+
+  // Elements
+  const loginSection = document.getElementById('login-section');
+  const bookingSection = document.getElementById('booking-section');
+  const thankyouSection = document.getElementById('thankyou-section');
+  const adminSection = document.getElementById('admin-section');
+
+  const loginMessage = document.getElementById('login-message');
+  const usernameInput = document.getElementById('username-input');
+
+  const kidNameInput = document.getElementById('kid-name');
+  const dateInput = document.getElementById('appointment-date');
+  const timeInput = document.getElementById('appointment-time');
+  const bookBtn = document.getElementById('book-btn');
+  const messageBox = document.getElementById('message');
+
+  const appointmentsList = document.getElementById('appointments-list');
+  const adminSearch = document.getElementById('admin-search');
+  const logoutAdminBtn = document.getElementById('logout-admin-btn');
+
+  const bookAgainBtn = document.getElementById('book-again-btn');
+  const endSessionBtn = document.getElementById('end-session-btn');
+
+  const dingSound = document.getElementById('ding-sound');
+
+  // Calendar elements
+  const calendarDiv = document.getElementById('calendar');
+  const prevMonthBtn = document.getElementById('prev-month-btn');
+  const nextMonthBtn = document.getElementById('next-month-btn');
+  const calendarMonthYear = document.getElementById('calendar-month-year');
+
+  // Import/Export buttons
+  const exportJsonBtn = document.getElementById('export-json-btn');
+  const importJsonBtn = document.getElementById('import-json-btn');
+  const importJsonInput = document.getElementById('import-json-input');
+
+  // Current month/year for calendar
+  let currentYear, currentMonth;
+
+  // Database simulation in localStorage under 'kidsyAppointmentsDB'
+  function getDB() {
+    return JSON.parse(localStorage.getItem('kidsyAppointmentsDB') || '[]');
+  }
+  function saveDB(db) {
+    localStorage.setItem('kidsyAppointmentsDB', JSON.stringify(db));
+  }
+
+  // Load saved user and auto-login
+  window.onload = () => {
+    const savedUser = localStorage.getItem('kidsyUsername');
+    if(savedUser) {
+      if(savedUser === adminUsername) {
+        loginAsAdmin();
+      } else {
+        loginAsUser(savedUser);
+      }
+    }
+  };
+
+  // LOGIN FLOW
+  document.getElementById('login-btn').onclick = () => {
+    const username = usernameInput.value.trim();
+    if(!username) {
+      loginMessage.textContent = 'Please enter a username.';
+      return;
+    }
+    loginMessage.textContent = '';
+    localStorage.setItem('kidsyUsername', username);
+
+    if(username === adminUsername) {
+      loginAsAdmin();
+    } else {
+      loginAsUser(username);
+    }
+  };
+
+  function loginAsAdmin() {
+    isAdmin = true;
+    loginSection.style.display = 'none';
+    bookingSection.style.display = 'none';
+    thankyouSection.style.display = 'none';
+    adminSection.style.display = 'block';
+    adminSearch.value = '';
+    loadAppointments();
+    initCalendar();
+  }
+
+  function loginAsUser(username) {
+    isAdmin = false;
+    loginSection.style.display = 'none';
+    bookingSection.style.display = 'block';
+    thankyouSection.style.display = 'none';
+    adminSection.style.display = 'none';
+    messageBox.textContent = '';
+    clearBookingForm();
+  }
+
+  // LOGOUT ADMIN
+  logoutAdminBtn.onclick = () => {
+    localStorage.removeItem('kidsyUsername');
+    isAdmin = false;
+    loginSection.style.display = 'block';
+    bookingSection.style.display = 'none';
+    thankyouSection.style.display = 'none';
+    adminSection.style.display = 'none';
+    usernameInput.value = '';
+  };
+
+  // BOOK APPOINTMENT
+  bookBtn.onclick = () => {
+    const kidName = kidNameInput.value.trim();
+    const date = dateInput.value;
+    const time = timeInput.value;
+
+    if(!kidName || !date || !time) {
+      messageBox.style.color = '#b33939';
+      messageBox.textContent = 'Please fill out all fields!';
+      return;
+    }
+
+    // Load current DB
+    let db = getDB();
+
+    // Check for overlapping appointment (optional)
+    let conflict = db.some(a => a.date === date && a.time === time);
+    if(conflict) {
+      messageBox.style.color = '#b33939';
+      messageBox.textContent = 'Sorry, this time slot is already booked.';
+      return;
+    }
+
+    // Save new appointment
+    db.push({ kidName, date, time, bookedAt: new Date().toISOString() });
+    saveDB(db);
+
+    // Play sound
+    dingSound.currentTime = 0;
+    dingSound.play();
+
+    // Show thank you page
+    bookingSection.style.display = 'none';
+    thankyouSection.style.display = 'block';
+  };
+
+  // CLEAR BOOKING FORM
+  function clearBookingForm() {
+    kidNameInput.value = '';
+    dateInput.value = '';
+    timeInput.value = '';
+  }
+
+  // THANK YOU PAGE BUTTONS
+  bookAgainBtn.onclick = () => {
+    thankyouSection.style.display = 'none';
+    bookingSection.style.display = 'block';
+    messageBox.textContent = '';
+    clearBookingForm();
+  };
+
+  endSessionBtn.onclick = () => {
+  // Clear stored username
+  localStorage.removeItem('kidsyUsername');
+
+  // Hide all sections except login
+  thankyouSection.style.display = 'none';
+  bookingSection.style.display = 'none';
+  adminSection.style.display = 'none';
+  loginSection.style.display = 'block';
+
+  // Clear login input
+  usernameInput.value = '';
+  loginMessage.textContent = '';
+  
+  // Clear booking form inputs just in case
+  kidNameInput.value = '';
+  dateInput.value = '';
+  timeInput.value = '';
+};
+
+
+  // ADMIN PANEL - Load appointments list
+  function loadAppointments() {
+    let db = getDB();
+
+    if(db.length === 0) {
+      appointmentsList.innerHTML = '<em>No appointments booked yet.</em>';
+      return;
+    }
+
+    renderAppointments(db);
+  }
+
+  // RENDER APPOINTMENTS
+  function renderAppointments(appointments) {
+    if(appointments.length === 0) {
+      appointmentsList.innerHTML = '<em>No matching appointments found.</em>';
+      return;
+    }
+
+    appointmentsList.innerHTML = appointments.map((appt, i) => `
+      <div class="appointment" title="Booked at: ${new Date(appt.bookedAt).toLocaleString()}">
+        <strong>${escapeHTML(appt.kidName)}</strong> — ${appt.date} at ${appt.time}
+        <button class="remove-btn" title="Remove Appointment" data-index="${i}">&times;</button>
+      </div>
+    `).join('');
+
+    // Add remove handlers
+    Array.from(document.getElementsByClassName('remove-btn')).forEach(btn => {
+      btn.onclick = () => {
+        const idx = parseInt(btn.getAttribute('data-index'));
+        if(confirm('Delete this appointment?')) {
+          let db = getDB();
+          db.splice(idx, 1);
+          saveDB(db);
+          loadAppointments();
+          renderCalendar(currentYear, currentMonth);
+        }
+      };
+    });
+  }
+
+  // ADMIN SEARCH
+  adminSearch.oninput = () => {
+    const q = adminSearch.value.trim().toLowerCase();
+    const db = getDB();
+    const filtered = db.filter(appt =>
+      appt.kidName.toLowerCase().includes(q) ||
+      appt.date.includes(q) ||
+      appt.time.includes(q)
+    );
+    renderAppointments(filtered);
+  };
+
+  // Escape HTML helper
+  function escapeHTML(str) {
+    return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]);
+  }
+
+  // --- Calendar Logic ---
+  function initCalendar() {
+    const today = new Date();
+    currentYear = today.getFullYear();
+    currentMonth = today.getMonth();
+
+    renderCalendar(currentYear, currentMonth);
+
+    prevMonthBtn.onclick = () => {
+      currentMonth--;
+      if(currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+      }
+      renderCalendar(currentYear, currentMonth);
+    };
+    nextMonthBtn.onclick = () => {
+      currentMonth++;
+      if(currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+      }
+      renderCalendar(currentYear, currentMonth);
+    };
+  }
+
+  function renderCalendar(year, month) {
+    calendarMonthYear.textContent = new Date(year, month).toLocaleString('default', {month: 'long', year: 'numeric'});
+
+    const db = getDB();
+
+    // First day (0=Sunday)
+    const firstDay = new Date(year, month, 1).getDay();
+    // Days in month
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    calendarDiv.innerHTML = '';
+
+    const table = document.createElement('table');
+    const thead = document.createElement('thead');
+    const tbody = document.createElement('tbody');
+
+    const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const headerRow = document.createElement('tr');
+    weekdays.forEach(day => {
+      const th = document.createElement('th');
+      th.textContent = day;
+      headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    let date = 1;
+    for(let i=0; i<6; i++) {
+      const row = document.createElement('tr');
+      for(let j=0; j<7; j++) {
+        const cell = document.createElement('td');
+
+        if(i === 0 && j < firstDay) {
+          cell.innerHTML = '';
+        } else if(date > daysInMonth) {
+          cell.innerHTML = '';
+        } else {
+          cell.classList.add('calendar-day');
+          cell.innerHTML = `<span class="date-num">${date}</span>`;
+
+          const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(date).padStart(2,'0')}`;
+          const apptsForDay = db.filter(a => a.date === dateStr);
+
+          if(apptsForDay.length > 0) {
+            cell.classList.add('appointment-day');
+
+            const countSpan = document.createElement('div');
+            countSpan.className = 'appt-count';
+            countSpan.textContent = apptsForDay.length + (apptsForDay.length === 1 ? ' Appt' : ' Appts');
+            cell.appendChild(countSpan);
+
+            cell.onclick = () => {
+              alert(`Appointments on ${dateStr}:\n\n` +
+                apptsForDay.map(a => `${a.time} - ${a.kidName}`).join('\n'));
+            };
+          }
+
+          const today = new Date();
+          if(year === today.getFullYear() && month === today.getMonth() && date === today.getDate()) {
+            cell.classList.add('today');
+          }
+
+          date++;
+        }
+        row.appendChild(cell);
+      }
+      tbody.appendChild(row);
+    }
+    table.appendChild(tbody);
+    calendarDiv.appendChild(table);
+  }
+
+  // EXPORT / IMPORT JSON
+  exportJsonBtn.onclick = () => {
+    const db = getDB();
+    const jsonStr = JSON.stringify(db, null, 2);
+    const blob = new Blob([jsonStr], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'kidsy_appointments_db.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  importJsonBtn.onclick = () => {
+    importJsonInput.click();
+  };
+
+  importJsonInput.onchange = () => {
+    const file = importJsonInput.files[0];
+    if(!file) return;
+
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const json = JSON.parse(e.target.result);
+        if(Array.isArray(json)) {
+          if(json.every(a => 'date' in a && 'time' in a && 'kidName' in a)) {
+            saveDB(json);
+            alert('Database imported successfully!');
+            loadAppointments();
+            renderCalendar(currentYear, currentMonth);
+          } else {
+            alert('Invalid JSON format.');
+          }
+        } else {
+          alert('JSON must be an array of appointments.');
+        }
+      } catch {
+        alert('Failed to parse JSON file.');
+      }
+    };
+    reader.readAsText(file);
+    importJsonInput.value = '';
+  };
+</script>
+
+</body>
+</html>
