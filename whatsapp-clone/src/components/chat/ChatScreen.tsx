@@ -6,6 +6,7 @@ import { useContacts } from '@/hooks/useContacts';
 import { useAuth } from '@/contexts/AuthContext';
 import { ArrowLeft, Send, Phone, Video, MoreVertical, Circle } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { Contact, Message } from '@/types';
 
 interface ChatScreenProps {
   chatId: string;
@@ -20,7 +21,7 @@ export default function ChatScreen({ chatId, contactId, onBack }: ChatScreenProp
   const { messages, loading, sendMessage, markMessagesAsRead } = useMessages(chatId);
   const { getContactById } = useContacts();
   const { user } = useAuth();
-  const [contact, setContact] = useState<any>(null);
+  const [contact, setContact] = useState<Contact | null>(null);
 
   // Fetch contact details
   useEffect(() => {
@@ -207,7 +208,7 @@ export default function ChatScreen({ chatId, contactId, onBack }: ChatScreenProp
 }
 
 interface MessageBubbleProps {
-  message: any;
+  message: Message;
   isOwn: boolean;
 }
 

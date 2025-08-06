@@ -19,7 +19,7 @@ export default function ContactList({ onBack, onContactSelect }: ContactListProp
   // Get filtered contacts based on search
   const filteredContacts = searchTerm ? searchContacts(searchTerm) : contacts;
 
-  const handleContactClick = async (contact: any) => {
+  const handleContactClick = async (contact: Contact) => {
     try {
       // Create or get existing chat with this contact
       const chatId = await createOrGetChat(contact.uid);
@@ -97,7 +97,7 @@ export default function ContactList({ onBack, onContactSelect }: ContactListProp
 }
 
 interface ContactListItemProps {
-  contact: any;
+  contact: Contact;
   onClick: () => void;
 }
 

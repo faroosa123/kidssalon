@@ -6,6 +6,7 @@ import { useContacts } from '@/hooks/useContacts';
 import { useAuth } from '@/contexts/AuthContext';
 import { Search, MessageCircle, Users, Settings, LogOut } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { Chat, Contact } from '@/types';
 import ContactList from './ContactList';
 
 interface ChatListProps {
@@ -27,7 +28,7 @@ export default function ChatList({ onChatSelect, selectedChatId }: ChatListProps
     return chat.lastMessage?.text.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
-  const handleChatClick = async (chat: any) => {
+  const handleChatClick = async (chat: Chat) => {
     // Find the other participant (not current user)
     const otherParticipant = chat.participants.find((p: string) => p !== user?.uid);
     if (otherParticipant) {
@@ -156,7 +157,7 @@ export default function ChatList({ onChatSelect, selectedChatId }: ChatListProps
 }
 
 interface ChatListItemProps {
-  chat: any;
+  chat: Chat;
   otherParticipant: string;
   isSelected: boolean;
   onClick: () => void;
@@ -164,7 +165,7 @@ interface ChatListItemProps {
 
 function ChatListItem({ chat, otherParticipant, isSelected, onClick }: ChatListItemProps) {
   const { getContactById } = useContacts();
-  const [contact, setContact] = React.useState<any>(null);
+  const [contact, setContact] = React.useState<Contact | null>(null);
 
   React.useEffect(() => {
     const fetchContact = async () => {
