@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useContacts } from '@/hooks/useContacts';
-import { useChats } from '@/hooks/useChats';
+import { useMockContacts } from '@/hooks/useMockContacts';
+import { useMockChats } from '@/hooks/useMockChats';
 import { ArrowLeft, Search, UserPlus, Circle } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -13,8 +13,8 @@ interface ContactListProps {
 
 export default function ContactList({ onBack, onContactSelect }: ContactListProps) {
   const [searchTerm, setSearchTerm] = useState('');
-  const { contacts, loading, searchContacts } = useContacts();
-  const { createOrGetChat } = useChats();
+  const { contacts, loading, searchContacts } = useMockContacts();
+  const { createOrGetChat } = useMockChats();
 
   // Get filtered contacts based on search
   const filteredContacts = searchTerm ? searchContacts(searchTerm) : contacts;

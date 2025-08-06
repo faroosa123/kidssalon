@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useMessages } from '@/hooks/useMessages';
-import { useContacts } from '@/hooks/useContacts';
-import { useAuth } from '@/contexts/AuthContext';
+import { useMockMessages } from '@/hooks/useMockMessages';
+import { useMockContacts } from '@/hooks/useMockContacts';
+import { useMockAuth } from '@/contexts/MockAuthContext';
 import { ArrowLeft, Send, Phone, Video, MoreVertical, Circle } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Contact, Message } from '@/types';
@@ -18,9 +18,9 @@ export default function ChatScreen({ chatId, contactId, onBack }: ChatScreenProp
   const [messageText, setMessageText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { messages, loading, sendMessage, markMessagesAsRead } = useMessages(chatId);
-  const { getContactById } = useContacts();
-  const { user } = useAuth();
+  const { messages, loading, sendMessage, markMessagesAsRead } = useMockMessages(chatId);
+  const { getContactById } = useMockContacts();
+  const { user } = useMockAuth();
   const [contact, setContact] = useState<Contact | null>(null);
 
   // Fetch contact details

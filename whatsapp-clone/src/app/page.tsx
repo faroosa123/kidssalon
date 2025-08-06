@@ -1,5 +1,5 @@
-import MainLayout from '@/components/layout/MainLayout';
+import DemoLayout from '@/components/layout/DemoLayout';
 
 export default function Home() {
-  return <MainLayout />;
+  return <DemoLayout />;
 }

@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useChats } from '@/hooks/useChats';
-import { useContacts } from '@/hooks/useContacts';
-import { useAuth } from '@/contexts/AuthContext';
+import { useMockChats } from '@/hooks/useMockChats';
+import { useMockContacts } from '@/hooks/useMockContacts';
+import { useMockAuth } from '@/contexts/MockAuthContext';
 import { Search, MessageCircle, Users, Settings, LogOut } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Chat, Contact } from '@/types';
@@ -18,9 +18,9 @@ export default function ChatList({ onChatSelect, selectedChatId }: ChatListProps
   const [searchTerm, setSearchTerm] = useState('');
   const [showContacts, setShowContacts] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const { chats, loading } = useChats();
-  const { getContactById } = useContacts();
-  const { user, signOut } = useAuth();
+  const { chats, loading } = useMockChats();
+  const { getContactById } = useMockContacts();
+  const { user, signOut } = useMockAuth();
 
   // Filter chats based on search term
   const filteredChats = chats.filter(chat => {
@@ -164,7 +164,7 @@ interface ChatListItemProps {
 }
 
 function ChatListItem({ chat, otherParticipant, isSelected, onClick }: ChatListItemProps) {
-  const { getContactById } = useContacts();
+  const { getContactById } = useMockContacts();
   const [contact, setContact] = React.useState<Contact | null>(null);
 
   React.useEffect(() => {
